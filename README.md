@@ -43,43 +43,29 @@ Developed by: AKSHAY KARTHICK ASR
 
 RegisterNumber:212224230015 
 ```
-module EXP12(
-    input clk,     
-    input reset,   
-    output [3:0] q 
-);
-    reg [3:0] q_int;
-
-    assign q = q_int;
-
-    always @(posedge clk or posedge reset) begin
-        if (reset) 
-            q_int[0] <= 1'b0; 
-        else 
-            q_int[0] <= ~q_int[0]; 
-    end
-
-    genvar i;
-    generate
-        for (i = 1; i < 4; i = i + 1) begin : ripple
-            always @(posedge q_int[i-1] or posedge reset) begin
-                if (reset) 
-                    q_int[i] <= 1'b0;
-                else 
-                    q_int[i] <= ~q_int[i]; 
-            end
-        end
-    endgenerate
+module EXP12(input clk, output reg [3:0] count);
+always @(posedge clk) count <= (count==15)?0:count+1;
 endmodule
+
+module RippleCounter_tb;
+reg clk; wire [3:0] count;
+RippleCounter uut(clk,count);
+
+initial begin clk=0; forever #5 clk=~clk; end
+initial begin repeat(20) begin #5 $display("%b",count); end $finish; end
+endmodule
+
 ```
 **RTL LOGIC FOR 4 Bit Ripple Counter**
 
-<img width="887" height="857" alt="image" src="https://github.com/user-attachments/assets/e1f1eb17-2bae-4819-8aa4-79c259c40e16" />
+<img width="1460" height="833" alt="image" src="https://github.com/user-attachments/assets/a061f3bc-b9a7-4a3a-996b-4916dbc59cd4" />
+
 
 
 **TIMING DIGRAMS FOR 4 Bit Ripple Counter**
 
-<img width="1919" height="1139" alt="image" src="https://github.com/user-attachments/assets/07d972d2-47b9-4bdc-b9f3-65dff97edc4d" />
+<img width="1919" height="737" alt="image" src="https://github.com/user-attachments/assets/d0f01997-35cc-4480-b242-66799a094658" />
+
 
 
 **RESULTS**
